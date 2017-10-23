@@ -1,6 +1,6 @@
 ---
 title: "Mini-Project 2"
-author: "Your Name Here"
+author: "Sam Ellinwood, Haley McAtee & Sam Schneider"
 date: "October 31, 2017"
 output: html_document
 ---
