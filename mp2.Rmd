@@ -8,8 +8,6 @@ output: html_document
 
 ## Loading the data
 
-This project is so interesting and relevant to my life!
-
 ```{r, include=FALSE}
 load("house_elections.rda")
 load("candidates.rda")
@@ -17,14 +15,11 @@ load("committees.rda")
 load("contributions.rda")
 ```
 
+## Loading packages 
+
 ```{r}
-library(dplyr)
-```
- 
-```{r}
-# Comment
-library(ggplot2)
 library(tidyverse)
+library(dplyr)
 ```
 
 
