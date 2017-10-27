@@ -46,6 +46,7 @@ my_candidates <- cand_cont %>%
 ```{r}
 #Selecting specific columns out of the my_candidates dataset
 my_candidates <- my_candidates %>%
-  select(1:6, transaction_amt, ge_winner)
+  select(1:6, transaction_amt, ge_winner) %>%
+  filter(transaction_amt > 0)
 ```
 
