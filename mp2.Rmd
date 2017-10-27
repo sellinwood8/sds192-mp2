@@ -39,10 +39,13 @@ cand_cont <- candidates %>%
 names(house_elections) <- c("cand_id", "state", "district", "incumbent", "candidate_name", "party", "primary_votes", "runoff_votes", "general_votes","ge_winner")
 
 #Merge house_elections and my_candidates
-
 my_candidates <- cand_cont %>%
-  inner_join(house_elections, by = )
+  inner_join(house_elections, by = "cand_id")
 ```
 
-
+```{r}
+#Selecting specific columns out of the my_candidates dataset
+my_candidates <- my_candidates %>%
+  select(1:6, transaction_amt, ge_winner)
+```
 
