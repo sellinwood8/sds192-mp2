@@ -26,5 +26,6 @@ library(dplyr)
 ```{r}
 my_candidates <- candidates %>%
   inner_join(contributions, by = "cand_id")
+View(my_candidates)
 ```
 
