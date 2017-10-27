@@ -21,3 +21,8 @@ load("contributions.rda")
 library(tidyverse)
 ```
 
+```{r}
+my_candidates <- candidates %>%
+  inner_join(contributions, by = "cand_id")
+```
+
