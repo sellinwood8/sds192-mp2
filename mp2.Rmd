@@ -23,7 +23,13 @@ library(tidyverse)
 
 ```{r, message = FALSE, warning = FALSE}
 #Merge candidates and contributions 
-my_candidates <- candidates %>%
+cand_cont <- candidates %>%
   inner_join(contributions, by = "cand_id")
+
+#Merge house_elections and my_candidates
+mutate(house_elections, )
+
+my_candidates <- cand_cont %>%
+  inner_join(house_elections, by = )
 ```
 
