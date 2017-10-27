@@ -17,11 +17,12 @@ load("contributions.rda")
 
 ## Loading packages 
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 library(tidyverse)
 ```
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
+#Merge candidates and contributions 
 my_candidates <- candidates %>%
   inner_join(contributions, by = "cand_id")
 ```
