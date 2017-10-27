@@ -23,4 +23,8 @@ library(dplyr)
 ```
 
 
-TEST
+```{r}
+my_candidates <- candidates %>%
+  inner_join(contributions, by = "cand_id")
+```
+
