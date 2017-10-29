@@ -17,9 +17,9 @@ load("contributions.rda")
 
 ## Loading packages 
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 library(tidyverse)
-library(dplyr)
+library(scales)
 ```
 
 
@@ -78,19 +78,21 @@ dem_loser
 ```{r, message = FALSE}
 #Add a winner_avg variable to my_candidates
 my_candidates <- my_candidates %>%
-  mutate("winner_avg" = if(ge_winner == "W" & cand_party_affiliation == "DEM") {
-                          dem_winner
-                      } else if (ge_winner == "N" & cand_party_affiliation == "DEM"){
-                          dem_loser
-                      } else if(ge_winner == "W" & cand_party_affiliation == "REP"){
-                          rep_winner
-                      } else if (ge_winner == "N" & cand_party_affiliation == "REP") {
-                          rep_loser
-                      }
-  )
+  mutate("winner_avg" = ifelse(ge_winner == "W" & cand_party_affiliation == "DEM", dem_winner,
+                        ifelse(ge_winner == "N" & cand_party_affiliation == "DEM", dem_loser,
+                        ifelse(ge_winner == "W" & cand_party_affiliation == "REP", rep_winner,
+                        rep_loser))))
+      
 
 my_candidates %>%
-  summarize("test" = n_distinct(avg_cont))
+  summarize("test" = n_distinct(winner_avg))
+```
+
+```{r}
+ggplot(my_candidates, aes(x = ge_winner, y = winner_avg)) +
+  geom_bar(stat = "Identity") +
+  facet_wrap(~cand_party_affiliation) +
+  scale_y_continuous(labels = dollar)
 ```
 
 ```{r, message = FALSE}
