@@ -49,9 +49,7 @@ my_candidates <- my_candidates %>%
 my_candidates %>%
   group_by(ge_winner) %>%
   summarize("total_for_winners" = sum(transaction_amt),
-            "num_winners" = n(),
+            "num_winners" = n_distinct(cand_id),
             "winner_avg" = total_for_winners/num_winners)
-
-  
 ```
 
