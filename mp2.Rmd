@@ -89,7 +89,7 @@ my_candidates %>%
 ```
 
 ```{r}
-ggplot(my_candidates, aes(x = ge_winner, y = winner_avg, fill = cand_party_affiliation)) +
+ggplot(my_candidates, aes(x = ge_winner, y = winner_avg, fill = cand_party_affiliation))  + scale_fill_manual(values=c("blue", "red")) +
   stat_summary(fun.y = "mean", geom = "bar", position = position_dodge()) +
   scale_y_continuous(breaks = c(0, 250000, 500000, 750000, 1000000), labels = dollar)
 ```
