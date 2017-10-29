@@ -22,15 +22,10 @@ library(tidyverse)
 library(dplyr)
 ```
 
-<<<<<<< HEAD
-
-```{r}
-my_candidates <- candidates %>%
-  inner_join(contributions, by = "cand_id")
-View(my_candidates)
-```
 
 ```{r, message = FALSE, warning = FALSE}
+#Create our own dataset from the FEC dataset
+
 #Merge candidates and contributions 
 cand_cont <- candidates %>%
   inner_join(contributions, by = "cand_id")
@@ -41,12 +36,22 @@ names(house_elections) <- c("cand_id", "state", "district", "incumbent", "candid
 #Merge house_elections and my_candidates
 my_candidates <- cand_cont %>%
   inner_join(house_elections, by = "cand_id")
-```
 
-```{r}
-#Selecting specific columns out of the my_candidates dataset
+#Select specific columns out of the my_candidates dataset
 my_candidates <- my_candidates %>%
   select(1:6, transaction_amt, ge_winner) %>%
   filter(transaction_amt > 0)
+```
+
+```{r}
+#Wrangling our dataset
+
+my_candidates %>%
+  group_by(ge_winner) %>%
+  summarize("total_for_winners" = sum(transaction_amt),
+            "num_winners" = n(),
+            "winner_avg" = total_for_winners/num_winners)
+
+  
 ```
 
