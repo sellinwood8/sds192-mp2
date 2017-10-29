@@ -40,16 +40,78 @@ my_candidates <- cand_cont %>%
 #Select specific columns out of the my_candidates dataset
 my_candidates <- my_candidates %>%
   select(1:6, transaction_amt, ge_winner) %>%
-  filter(transaction_amt > 0)
+  filter(transaction_amt > 0, cand_party_affiliation == "DEM" | cand_party_affiliation == "REP")
 ```
 
 ```{r}
-#Wrangling our dataset
+#Storing republican winner and loser averages in rep_winner and rep_loser 
+rep_wl <- my_candidates %>%
+    filter(cand_party_affiliation == "REP") %>%
+    group_by(ge_winner) %>%
+    summarize("total_for_winners" = sum(transaction_amt),
+              "num_winners" = n_distinct(cand_id),
+               "winner_avg" = total_for_winners/num_winners) 
+  
+rep_winner <- rep_wl$winner_avg[[2]]
+rep_loser <- rep_wl$winner_avg[[1]]
+
+#Storing democarat winner and loser averages in dem_winner and dem_loser 
+dem_wl <- my_candidates %>%
+    filter(cand_party_affiliation == "DEM") %>%
+    group_by(ge_winner) %>%
+    summarize("total_for_winners" = sum(transaction_amt),
+              "num_winners" = n_distinct(cand_id),
+               "winner_avg" = total_for_winners/num_winners) 
+  
+dem_winner <- dem_wl$winner_avg[[2]]
+dem_loser <- dem_wl$winner_avg[[1]]
+```
+
+```{r}
+#Checking rep and dem winner and loser variables
+rep_winner
+rep_loser
+dem_winner
+dem_loser
+```
+
+```{r, message = FALSE}
+#Add a winner_avg variable to my_candidates
+my_candidates <- my_candidates %>%
+  mutate("winner_avg" = if(ge_winner == "W" & cand_party_affiliation == "DEM") {
+                          dem_winner
+                      } else if (ge_winner == "N" & cand_party_affiliation == "DEM"){
+                          dem_loser
+                      } else if(ge_winner == "W" & cand_party_affiliation == "REP"){
+                          rep_winner
+                      } else if (ge_winner == "N" & cand_party_affiliation == "REP") {
+                          rep_loser
+                      }
+  )
 
 my_candidates %>%
-  group_by(ge_winner) %>%
-  summarize("total_for_winners" = sum(transaction_amt),
-            "num_winners" = n_distinct(cand_id),
-            "winner_avg" = total_for_winners/num_winners)
+  summarize("test" = n_distinct(avg_cont))
 ```
+
+```{r, message = FALSE}
+#Attempting to write a function that creates the rep/dem winner and loser variables
+get_avg <- function(party_arg, party_winner_arg, party_loser_arg) {
+  party_winners <- my_candidates %>%
+    filter(cand_party_affiliation == party_arg) %>%
+    group_by(ge_winner) %>%
+    summarize("total_for_winners" = sum(transaction_amt),
+              "num_winners" = n_distinct(cand_id),
+               "winner_avg" = total_for_winners/num_winners) 
+  
+party_winner_arg <- party_winners$winner_avg[[2]]
+party_loser_arg <- party_winners$winner_avg[[1]]
+
+print(party_winner_arg)
+print(party_loser_arg)
+}
+
+get_avg(party_arg = "REP", party_winner_arg = "rep_winner", party_loser_arg = "rep_loser")
+
+```
+
 
