@@ -89,10 +89,9 @@ my_candidates %>%
 ```
 
 ```{r}
-ggplot(my_candidates, aes(x = ge_winner, y = winner_avg)) +
-  geom_bar(stat = "Identity") +
-  facet_wrap(~cand_party_affiliation) +
-  scale_y_continuous(labels = dollar)
+ggplot(my_candidates, aes(x = ge_winner, y = winner_avg, fill = cand_party_affiliation)) +
+  stat_summary(fun.y = "mean", geom = "bar", position = position_dodge()) +
+  scale_y_continuous(breaks = c(0, 250000, 500000, 750000, 1000000), labels = dollar)
 ```
 
 ```{r, message = FALSE}
