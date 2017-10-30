@@ -40,32 +40,55 @@ my_candidates <- cand_cont %>%
 
 #Select specific columns out of the my_candidates dataset
 my_candidates <- my_candidates %>%
-  select(1:6, transaction_amt, general_votes, ge_winner) %>%
+  select(1:6, transaction_amt, incumbent, general_votes, ge_winner) %>%
   filter(transaction_amt > 0, general_votes > 0, cand_party_affiliation == "DEM" | cand_party_affiliation == "REP")
 ```
 
-```{r}
-#Storing republican winner and loser averages in rep_winner and rep_loser 
-rep_wl <- my_candidates %>%
-    filter(cand_party_affiliation == "REP") %>%
-    group_by(ge_winner) %>%
-    summarize("total_for_winners" = sum(transaction_amt),
-              "num_winners" = n_distinct(cand_id),
-               "winner_avg" = total_for_winners/num_winners) 
-  
-rep_winner <- rep_wl$winner_avg[[2]]
-rep_loser <- rep_wl$winner_avg[[1]]
 
-#Storing democarat winner and loser averages in dem_winner and dem_loser 
-dem_wl <- my_candidates %>%
-    filter(cand_party_affiliation == "DEM") %>%
+```{r}
+#Storing republican winner and loser averages for incumbent candidates in rep_inc_winner and rep_inc_loser 
+rep_wl <- my_candidates %>%
+    filter(cand_party_affiliation == "REP", incumbent == TRUE) %>%
     group_by(ge_winner) %>%
     summarize("total_for_winners" = sum(transaction_amt),
               "num_winners" = n_distinct(cand_id),
                "winner_avg" = total_for_winners/num_winners) 
   
-dem_winner <- dem_wl$winner_avg[[2]]
-dem_loser <- dem_wl$winner_avg[[1]]
+rep_inc_winner <- rep_wl$winner_avg[[2]]
+rep_inc_loser <- rep_wl$winner_avg[[1]]
+
+#Storing republican winner and loser averages for non-incumbent candidates in rep_ninc_winner and rep_ninc_loser 
+rep_wl <- my_candidates %>%
+    filter(cand_party_affiliation == "REP", incumbent == TRUE) %>%
+    group_by(ge_winner) %>%
+    summarize("total_for_winners" = sum(transaction_amt),
+              "num_winners" = n_distinct(cand_id),
+               "winner_avg" = total_for_winners/num_winners) 
+  
+rep_ninc_winner <- rep_wl$winner_avg[[2]]
+rep_ninc_loser <- rep_wl$winner_avg[[1]]
+
+#Storing democarat winner and loser averages for incumbent candidates in dem_inc_winner and dem_inc_loser 
+dem_wl <- my_candidates %>%
+    filter(cand_party_affiliation == "DEM", incumbent == FALSE) %>%
+    group_by(ge_winner) %>%
+    summarize("total_for_winners" = sum(transaction_amt),
+              "num_winners" = n_distinct(cand_id),
+               "winner_avg" = total_for_winners/num_winners) 
+  
+dem_inc_winner <- dem_wl$winner_avg[[2]]
+dem_inc_loser <- dem_wl$winner_avg[[1]]
+
+#Storing democarat winner and loser averages for non-incumbent candidates in dem_ninc_winner and dem_ninc_loser 
+dem_wl <- my_candidates %>%
+    filter(cand_party_affiliation == "DEM", incumbent == FALSE) %>%
+    group_by(ge_winner) %>%
+    summarize("total_for_winners" = sum(transaction_amt),
+              "num_winners" = n_distinct(cand_id),
+               "winner_avg" = total_for_winners/num_winners) 
+  
+dem_inc_winner <- dem_wl$winner_avg[[2]]
+dem_inc_loser <- dem_wl$winner_avg[[1]]
 ```
 
 
