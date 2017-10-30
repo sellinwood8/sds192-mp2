@@ -2,7 +2,9 @@
 title: "Mini-Project 2"
 author: "Sam Ellinwood, Haley McAtee & Sam Schneider"
 date: "October 31, 2017"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 
@@ -22,10 +24,9 @@ library(tidyverse)
 library(scales)
 ```
 
+## Create our own dataset from the FEC dataset
 
 ```{r, message = FALSE, warning = FALSE}
-#Create our own dataset from the FEC dataset
-
 #Merge candidates and contributions 
 cand_cont <- candidates %>%
   inner_join(contributions, by = "cand_id")
@@ -67,13 +68,6 @@ dem_winner <- dem_wl$winner_avg[[2]]
 dem_loser <- dem_wl$winner_avg[[1]]
 ```
 
-```{r}
-#Checking rep and dem winner and loser variables
-rep_winner
-rep_loser
-dem_winner
-dem_loser
-```
 
 ```{r, message = FALSE}
 #Add a winner_avg variable to my_candidates
@@ -88,6 +82,8 @@ my_candidates %>%
   summarize("test" = n_distinct(winner_avg))
 ```
 
+## Creating the data graphic 
+
 ```{r}
 ggplot(my_candidates, aes(x = ge_winner, y = winner_avg, 
                           fill = cand_party_affiliation)) +
@@ -100,6 +96,8 @@ ggplot(my_candidates, aes(x = ge_winner, y = winner_avg,
   labs(y = "Average Contribution per Candidate", x = "Candidates", 
        fill = "Candidate Party Affiliation") 
 ```
+
+## Function to create rep/dem winner & loser variables 
 
 ```{r, message = FALSE}
 #Attempting to write a function that creates the rep/dem winner and loser variables
