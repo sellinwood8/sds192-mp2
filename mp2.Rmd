@@ -40,8 +40,8 @@ my_candidates <- cand_cont %>%
 
 #Select specific columns out of the my_candidates dataset
 my_candidates <- my_candidates %>%
-  select(1:6, transaction_amt, ge_winner) %>%
-  filter(transaction_amt > 0, cand_party_affiliation == "DEM" | cand_party_affiliation == "REP")
+  select(1:6, transaction_amt, general_votes, ge_winner) %>%
+  filter(transaction_amt > 0, general_votes > 0, cand_party_affiliation == "DEM" | cand_party_affiliation == "REP")
 ```
 
 ```{r}
