@@ -76,16 +76,14 @@ my_candidates <- my_candidates %>%
                         ifelse(ge_winner == "N" & cand_party_affiliation == "DEM", dem_loser,
                         ifelse(ge_winner == "W" & cand_party_affiliation == "REP", rep_winner,
                         rep_loser))))
-      
-
-my_candidates %>%
-  summarize("test" = n_distinct(winner_avg))
 ```
 
 ## Creating the data graphic 
 
 ```{r}
-ggplot(my_candidates, aes(x = ge_winner, y = winner_avg, 
+#Creating our plot
+ggplot(my_candidates, aes(x = ge_winner, 
+                          y = winner_avg, 
                           fill = cand_party_affiliation)) +
   scale_fill_manual(values = c("blue", "red"), labels = c("Democrat", "Republican")) +
   stat_summary(fun.y = "mean", geom = "bar", position = position_dodge()) +
@@ -93,7 +91,8 @@ ggplot(my_candidates, aes(x = ge_winner, y = winner_avg,
   scale_x_discrete(breaks=c("N", "W"),labels=c("Loser", "Winner")) +
   ggtitle("Average Donor Contributions to Winning and Losing Candidates") +
   theme(plot.title = element_text(hjust = 0.5)) +
-  labs(y = "Average Contribution per Candidate", x = "Candidates", 
+  labs(y = "Average Contribution per Candidate", 
+       x = "Candidates", 
        fill = "Candidate Party Affiliation") 
 ```
 
