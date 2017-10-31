@@ -41,7 +41,7 @@ my_candidates <- cand_cont %>%
 #Select specific columns out of the my_candidates dataset
 my_candidates <- my_candidates %>%
   select(1:6, transaction_amt, incumbent, general_votes, ge_winner) %>%
-  filter(cand_office_state == c("CA", "TX"), transaction_amt > 0, general_votes > 0, cand_party_affiliation == "DEM" | cand_party_affiliation == "REP")
+  filter(cand_office_state == c("CA", "TX", "FL"), transaction_amt > 0, general_votes > 0, cand_party_affiliation == "DEM" | cand_party_affiliation == "REP")
 ```
 
 ## Function to create rep/dem winner & loser variables for different states
@@ -83,6 +83,18 @@ TX_rep_data <- get_avg(state_arg = "TX", party_arg = "REP")
 
 TX_rep_winner <- TX_rep_data$cand_avg[[2]]
 TX_rep_loser <- TX_rep_data$cand_avg[[1]]
+
+#Averages for FL Democrats
+FL_dem_data <- get_avg(state_arg = "FL", party_arg = "DEM")
+
+FL_dem_winner <- FL_dem_data$cand_avg[[2]]
+FL_dem_loser <- FL_dem_data$cand_avg[[1]]
+
+#Averages for FL Republicans
+FL_rep_data <- get_avg(state_arg = "FL", party_arg = "REP")
+
+FL_rep_winner <- FL_rep_data$cand_avg[[2]]
+FL_rep_loser <- FL_rep_data$cand_avg[[1]]
 ```
 
 ```{r, message = FALSE}
@@ -94,8 +106,12 @@ my_candidates <- my_candidates %>%
                         ifelse(ge_winner == "N" & cand_party_affiliation == "REP" & cand_office_state == "CA", CA_rep_loser, 
                         ifelse(ge_winner == "W" & cand_party_affiliation == "DEM" & cand_office_state == "TX", TX_dem_winner,
                         ifelse(ge_winner == "N" & cand_party_affiliation == "DEM" & cand_office_state == "TX", TX_dem_loser,
-                        ifelse(ge_winner == "W" & cand_party_affiliation == "REP" & cand_office_state == "TX", TX_rep_winner,       
-                        TX_rep_loser))))))))
+                        ifelse(ge_winner == "W" & cand_party_affiliation == "REP" & cand_office_state == "TX", TX_rep_winner,
+                        ifelse(ge_winner == "N" & cand_party_affiliation == "REP" & cand_office_state == "TX", TX_rep_loser,       
+                        ifelse(ge_winner == "W" & cand_party_affiliation == "DEM" & cand_office_state == "FL", FL_dem_winner,
+                        ifelse(ge_winner == "N" & cand_party_affiliation == "DEM" & cand_office_state == "FL", FL_dem_loser,
+                        ifelse(ge_winner == "W" & cand_party_affiliation == "REP" & cand_office_state == "FL", FL_rep_winner,
+                               FL_rep_loser))))))))))))
 
 summarize(my_candidates, "n" = n_distinct(cand_avg))
 ```
@@ -110,7 +126,7 @@ ggplot(my_candidates, aes(x = ge_winner,
   scale_fill_manual(values = c("blue", "red"), labels = c("Democrat", "Republican")) +
   geom_bar(position = "dodge", stat = "summary", fun.y = "mean") +
   facet_wrap(~cand_office_state) +
-  scale_y_continuous(breaks = c(0, 250000, 500000, 750000, 1000000), labels = dollar) +
+  scale_y_continuous(breaks = c(0, 100000, 200000, 300000, 400000), labels = dollar) +
   scale_x_discrete(breaks=c("N", "W"),labels=c("Loser", "Winner")) +
   ggtitle("Average Donor Contributions to Winning and Losing Candidates") +
   theme(plot.title = element_text(hjust = 0.5)) +
@@ -169,6 +185,10 @@ TX_dem_winner
 TX_dem_loser
 TX_rep_winner
 TX_rep_loser
+FL_dem_winner
+FL_dem_loser
+FL_rep_winner
+FL_rep_loser
 ```
 
 ```{r}
