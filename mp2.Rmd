@@ -126,51 +126,9 @@ ggplot(my_candidates, aes(x = ge_winner,
   facet_wrap(~cand_office_state) +
   scale_y_continuous(breaks = c(0, 100000, 200000, 300000, 400000), labels = dollar) +
   scale_x_discrete(breaks=c("N", "W"),labels=c("Loser", "Winner")) +
-  ggtitle("Average Total Contributions to House Candidates") +
+  ggtitle("Average Donor Contributions to Winning and Losing Candidates") +
   theme(plot.title = element_text(hjust = 0.5)) +
-  labs(y = "Average Total Contribution", 
-       x = "House Candidates", 
-       fill = "Candidate Party Affiliation") 
+  labs(y = "Average Contribution per Candidate", 
+       x = "Candidates", 
+       fill = "Candidate Party Affiliation")
 ```
-
-## Function to create rep/dem winner & loser variables 
-
-```{r, message = FALSE}
-#Attempting to write a function that creates the rep/dem winner and loser variables
-get_avg <- function(state_arg, party_arg) {
-  my_state_data <- my_candidates %>%
-    filter(cand_office_state == state_arg, cand_party_affiliation == party_arg) %>%
-    group_by(ge_winner) %>%
-    summarize("total_transactions" = sum(transaction_amt),
-              "num_cand" = n_distinct(cand_id),
-               "cand_avg" = total_transactions/num_cand) %>%
-    return()
-}  
-```
-
-```{r, message = FALSE}
-#Averages for CA Democrats
-CA_dem_data <- get_avg(state_arg = "CA", party_arg = "DEM")
-
-CA_dem_winner <- CA_dem_data$cand_avg[[2]]
-CA_dem_loser <- CA_dem_data$cand_avg[[1]]
-
-#Averages for CA Republicans
-CA_rep_data <- get_avg(state_arg = "CA", party_arg = "REP")
-
-CA_rep_winner <- CA_rep_data$cand_avg[[2]]
-CA_rep_loser <- CA_rep_data$cand_avg[[1]]
-  
-#Averages for TX Democrats
-TX_dem_data <- get_avg(state_arg = "TX", party_arg = "DEM")
-
-TX_dem_winner <- TX_dem_data$cand_avg[[2]]
-TX_dem_loser <- TX_dem_data$cand_avg[[1]]
-
-#Averages for TX Republicans
-TX_rep_data <- get_avg(state_arg = "TX", party_arg = "REP")
-
-TX_rep_winner <- TX_rep_data$cand_avg[[2]]
-TX_rep_loser <- TX_rep_data$cand_avg[[1]]
-```
-
