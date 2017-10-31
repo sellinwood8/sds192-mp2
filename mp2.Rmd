@@ -47,58 +47,74 @@ my_candidates <- my_candidates %>%
 
 ```{r}
 #Storing republican winner and loser averages for incumbent candidates in rep_inc_winner and rep_inc_loser 
-rep_wl <- my_candidates %>%
-    filter(cand_party_affiliation == "REP", incumbent == TRUE) %>%
+rep_inc <- my_candidates %>%
+    filter(cand_party_affiliation == "REP", incumbent == "TRUE") %>%
     group_by(ge_winner) %>%
     summarize("total_for_winners" = sum(transaction_amt),
               "num_winners" = n_distinct(cand_id),
                "winner_avg" = total_for_winners/num_winners) 
   
-rep_inc_winner <- rep_wl$winner_avg[[2]]
-rep_inc_loser <- rep_wl$winner_avg[[1]]
+rep_inc_winner <- rep_inc$winner_avg[[2]]
+rep_inc_loser <- rep_ninc$winner_avg[[1]]
 
 #Storing republican winner and loser averages for non-incumbent candidates in rep_ninc_winner and rep_ninc_loser 
-rep_wl <- my_candidates %>%
-    filter(cand_party_affiliation == "REP", incumbent == TRUE) %>%
+rep_ninc <- my_candidates %>%
+    filter(cand_party_affiliation == "REP", incumbent == "FALSE") %>%
     group_by(ge_winner) %>%
     summarize("total_for_winners" = sum(transaction_amt),
               "num_winners" = n_distinct(cand_id),
                "winner_avg" = total_for_winners/num_winners) 
-  
-rep_ninc_winner <- rep_wl$winner_avg[[2]]
-rep_ninc_loser <- rep_wl$winner_avg[[1]]
+
+rep_ninc_winner <- rep_ninc$winner_avg[[2]]
+rep_ninc_loser <- rep_ninc$winner_avg[[1]]
 
 #Storing democarat winner and loser averages for incumbent candidates in dem_inc_winner and dem_inc_loser 
-dem_wl <- my_candidates %>%
-    filter(cand_party_affiliation == "DEM", incumbent == FALSE) %>%
+dem_inc <- my_candidates %>%
+    filter(cand_party_affiliation == "DEM", incumbent == "TRUE") %>%
     group_by(ge_winner) %>%
     summarize("total_for_winners" = sum(transaction_amt),
               "num_winners" = n_distinct(cand_id),
                "winner_avg" = total_for_winners/num_winners) 
-  
-dem_inc_winner <- dem_wl$winner_avg[[2]]
-dem_inc_loser <- dem_wl$winner_avg[[1]]
+
+dem_inc_winner <- dem_inc$winner_avg[[2]]
+dem_inc_loser <- dem_ninc$winner_avg[[1]]
 
 #Storing democarat winner and loser averages for non-incumbent candidates in dem_ninc_winner and dem_ninc_loser 
-dem_wl <- my_candidates %>%
-    filter(cand_party_affiliation == "DEM", incumbent == FALSE) %>%
+dem_ninc <- my_candidates %>%
+    filter(cand_party_affiliation == "DEM", incumbent == "FALSE") %>%
     group_by(ge_winner) %>%
     summarize("total_for_winners" = sum(transaction_amt),
               "num_winners" = n_distinct(cand_id),
                "winner_avg" = total_for_winners/num_winners) 
-  
-dem_inc_winner <- dem_wl$winner_avg[[2]]
-dem_inc_loser <- dem_wl$winner_avg[[1]]
+
+dem_ninc_winner <- dem_inc$winner_avg[[2]]
+dem_ninc_loser <- dem_ninc$winner_avg[[1]]
 ```
 
 
 ```{r, message = FALSE}
 #Add a winner_avg variable to my_candidates
 my_candidates <- my_candidates %>%
-  mutate("winner_avg" = ifelse(ge_winner == "W" & cand_party_affiliation == "DEM", dem_winner,
-                        ifelse(ge_winner == "N" & cand_party_affiliation == "DEM", dem_loser,
-                        ifelse(ge_winner == "W" & cand_party_affiliation == "REP", rep_winner,
-                        rep_loser))))
+  mutate("winner_avg" = ifelse(ge_winner == "W" & cand_party_affiliation == "DEM" & incumbent == TRUE, dem_inc_winner,
+                        ifelse(ge_winner == "W" & cand_party_affiliation == "DEM" & incumbent == FALSE, dem_ninc_winner,
+                        ifelse(ge_winner == "N" & cand_party_affiliation == "DEM" & incumbent == TRUE, dem_inc_loser,
+                        ifelse(ge_winner == "N" & cand_party_affiliation == "DEM" & incumbent == FALSE, dem_ninc_loser, 
+                        ifelse(ge_winner == "W" & cand_party_affiliation == "REP" & incumbent == TRUE, rep_inc_winner,
+                        ifelse(ge_winner == "W" & cand_party_affiliation == "REP" & incumbent == FALSE, rep_ninc_winner,
+                        ifelse(ge_winner == "N" & cand_party_affiliation == "REP" & incumbent == TRUE, rep_inc_loser,       
+                        rep_ninc_loser))))))))
+```
+
+
+```{r}
+rep_inc_winner
+rep_inc_loser
+rep_ninc_winner
+rep_ninc_loser
+dem_inc_winner
+dem_inc_loser
+dem_ninc_winner
+dem_ninc_loser
 ```
 
 ## Creating the data graphic 
@@ -110,6 +126,7 @@ ggplot(my_candidates, aes(x = ge_winner,
                           fill = cand_party_affiliation)) +
   scale_fill_manual(values = c("blue", "red"), labels = c("Democrat", "Republican")) +
   stat_summary(fun.y = "mean", geom = "bar", position = position_dodge()) +
+  facet_wrap(~incumbent) +
   scale_y_continuous(breaks = c(0, 250000, 500000, 750000, 1000000), labels = dollar) +
   scale_x_discrete(breaks=c("N", "W"),labels=c("Loser", "Winner")) +
   ggtitle("Average Donor Contributions to Winning and Losing Candidates") +
