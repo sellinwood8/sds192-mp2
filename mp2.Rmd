@@ -126,10 +126,10 @@ ggplot(my_candidates, aes(x = ge_winner,
   facet_wrap(~cand_office_state) +
   scale_y_continuous(breaks = c(0, 100000, 200000, 300000, 400000), labels = dollar) +
   scale_x_discrete(breaks=c("N", "W"),labels=c("Loser", "Winner")) +
-  ggtitle("Average Donor Contributions to Winning and Losing Candidates") +
+  ggtitle("Average Total Contributions to House Candidates") +
   theme(plot.title = element_text(hjust = 0.5)) +
-  labs(y = "Average Contribution per Candidate", 
-       x = "Candidates", 
+  labs(y = "Average Total Contribution", 
+       x = "House Candidates", 
        fill = "Candidate Party Affiliation") 
 ```
 
