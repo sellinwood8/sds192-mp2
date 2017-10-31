@@ -47,7 +47,7 @@ my_candidates <- my_candidates %>%
 ## Function to create rep/dem winner & loser variables for different states
 
 ```{r, message = FALSE}
-#Attempting to write a function that creates the rep/dem winner and loser variables
+#Function that creates the rep/dem winner and loser variables
 get_avg <- function(state_arg, party_arg) {
   my_state_data <- my_candidates %>%
     filter(cand_office_state == state_arg, cand_party_affiliation == party_arg) %>%
@@ -112,8 +112,6 @@ my_candidates <- my_candidates %>%
                         ifelse(ge_winner == "N" & cand_party_affiliation == "DEM" & cand_office_state == "FL", FL_dem_loser,
                         ifelse(ge_winner == "W" & cand_party_affiliation == "REP" & cand_office_state == "FL", FL_rep_winner,
                                FL_rep_loser))))))))))))
-
-summarize(my_candidates, "n" = n_distinct(cand_avg))
 ```
 
 ## Creating the data graphic 
@@ -176,26 +174,3 @@ TX_rep_winner <- TX_rep_data$cand_avg[[2]]
 TX_rep_loser <- TX_rep_data$cand_avg[[1]]
 ```
 
-```{r}
-CA_dem_winner
-CA_dem_loser
-CA_rep_winner
-CA_rep_loser
-TX_dem_winner
-TX_dem_loser
-TX_rep_winner
-TX_rep_loser
-FL_dem_winner
-FL_dem_loser
-FL_rep_winner
-FL_rep_loser
-```
-
-```{r}
-my_candidates %>%
-    filter(cand_office_state == "CA", cand_party_affiliation == "REP") %>%
-    group_by(ge_winner) %>%
-    summarize("total_transactions" = sum(transaction_amt),
-              "num_cand" = n_distinct(cand_id),
-               "cand_avg" = total_transactions/num_cand)
-```
