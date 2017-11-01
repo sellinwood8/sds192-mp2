@@ -7,26 +7,25 @@ output:
   html_document: default
 ---
 
-
-## Loading the data
+## Code
 
 ```{r, include=FALSE}
+#Load the FEC datasets
 load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
 ```
 
-## Loading packages 
-
 ```{r, message = FALSE, warning = FALSE}
+#Load packages
 library(tidyverse)
 library(scales)
 ```
 
-## Create our own dataset from the FEC dataset
-
 ```{r, message = FALSE, warning = FALSE}
+#Create our own dataset from the FEC datasets
+
 #Merge candidates and contributions 
 cand_cont <- candidates %>%
   inner_join(contributions, by = "cand_id")
@@ -44,14 +43,15 @@ my_candidates <- my_candidates %>%
   filter(cand_office_state == c("CA", "TX", "FL"), transaction_amt > 0, general_votes > 0, cand_party_affiliation == "DEM" | cand_party_affiliation == "REP")
 ```
 
-## Function to create rep/dem winner & loser variables for different states
-
 ```{r, message = FALSE}
-#Function that creates the rep/dem winner and loser variables
+#Function that creates the rep/dem winner and loser variables for different states
 get_avg <- function(state_arg, party_arg) {
   my_state_data <- my_candidates %>%
+    #Filter by state and party
     filter(cand_office_state == state_arg, cand_party_affiliation == party_arg) %>%
+    #Group by election result (win/loss)
     group_by(ge_winner) %>%
+    #Use summarize to calculate average total contribution per candidate
     summarize("total_transactions" = sum(transaction_amt),
               "num_cand" = n_distinct(cand_id),
                "cand_avg" = total_transactions/num_cand) %>%
@@ -60,6 +60,8 @@ get_avg <- function(state_arg, party_arg) {
 ```
 
 ```{r, message = FALSE}
+#Storing average total contributions per candidate
+
 #Averages for CA Democrats
 CA_dem_data <- get_avg(state_arg = "CA", party_arg = "DEM")
 
@@ -98,7 +100,7 @@ FL_rep_loser <- FL_rep_data$cand_avg[[1]]
 ```
 
 ```{r, message = FALSE}
-#Add a winner_avg variable to my_candidates
+#Add a winner_avg variable to my_candidates that contains avereage total contributions per candidate
 my_candidates <- my_candidates %>%
   mutate("cand_avg" = ifelse(ge_winner == "W" & cand_party_affiliation == "DEM" & cand_office_state == "CA", CA_dem_winner,
                         ifelse(ge_winner == "N" & cand_party_affiliation == "DEM" & cand_office_state == "CA", CA_dem_loser,
@@ -114,7 +116,7 @@ my_candidates <- my_candidates %>%
                                FL_rep_loser))))))))))))
 ```
 
-## Creating the data graphic 
+## Data graphic 
 
 ```{r}
 #Creating our plot
@@ -133,9 +135,7 @@ ggplot(my_candidates, aes(x = ge_winner,
        fill = "Candidate Party Affiliation")
 ```
 
-## Blog Post Text 
-
-### Analysis and Insight 
+## Analysis and Insight 
 
 This data graphic examines the distribution of campaign funding between winners and losers of congressional elections in 2012. Additionally, it also shows how this distribution changes by both party affiliation and the state in which the election occurred. This provides insight into the impact that campaign finance has on the outcome of an election. We decided to facet by California, Florida, and Texas because these represent blue, red, and swing states. Also, these states are comparable in number of representatives and wealth of residents. 
 
