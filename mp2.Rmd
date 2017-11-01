@@ -133,10 +133,17 @@ ggplot(my_candidates, aes(x = ge_winner,
        fill = "Candidate Party Affiliation")
 ```
 
-This data graphic examines the distribution of campaign funding between winners and losers of congressional elections in 2012. Additionally, it also shows how this distribution changes by both party affiliation and the state in which the election occurred. This provides insight into the impact that campaign finance has on the outcome of an election. We can see that among Republican candidates, those who lost the election received more funding on average than those who won. Contrastingly among Democrats, those who won the election received much more funding than those who lost. This suggests that the Republican party is not as unified, as refelcted by their propensity to encourage donations to candidates who have a lower chance of winning. This could also suggest that money invested into Republican candidiates provides a lower return on investment as there is a greater likelihood that the candidate who receives the most donations will win the election. 
+## Blog Post Text 
 
+### Analysis and Insight 
 
+This data graphic examines the distribution of campaign funding between winners and losers of congressional elections in 2012. Additionally, it also shows how this distribution changes by both party affiliation and the state in which the election occurred. This provides insight into the impact that campaign finance has on the outcome of an election. We decided to facet by California, Florida, and Texas because these represent blue, red, and swing states. Also, these states are comparable in number of representatives and wealth of residents. 
 
+From our graphic we can see that among Republican candidates, those who lost the election received more funding on average than those who won. On the other hand among Democrats, those who won the election received much more funding than those who lost. This suggests that the Republican party is not as unified, as reflected by their propensity to encourage donations to candidates who have a lower chance of winning. This could also suggest that money invested into Republican candidates provides a lower return on investment as there is a greater likelihood that the candidate who receives the most donations will win the election. 
+
+We found it most interesting that Republican losers in Texas received significantly more contributions on average than Democrat losers as well as Republican winners. This can be due to the fact that Republican citizens in Texas who are very wealthy, and thus would donate more dollars, tend to be tied to the oil industry, which politically is directly influenced by certain parties in office. On the other hand, there are so few donations to Democrat losers probably because these candidates were extremely unlikely to win, given Texas' right leaning political climate. 
+
+Although our data graphic provides insight into how campaign finance might affect the outcome of an election, we acknowledge that there are many underlying factors that affect these outcomes and may skew the results. What would be most insightful would be a regression predicting the effect of donations on election outcome with various controls. The controls we should consider would include state population, number of candidates, political atmosphere of the state, average income of the state, and other demographic factors like age and race of the population. Although these controls are not directly considered in our data graphic, our bar chart provides motivation into areas for further research regarding this phenomenon. 
 
 
 
